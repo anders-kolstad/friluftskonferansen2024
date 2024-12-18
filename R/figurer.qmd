@@ -1,0 +1,31 @@
+---
+title: "Figures"
+format: html
+editor: visual
+---
+
+## Figurer til Friluftskonferansen 2024
+
+```{r setup}
+library(knitr)
+library(tidyverse)
+library(readxl)
+```
+
+Data from [SSB](https://www.ssb.no/statbank/table/06289/)
+
+```{r import}
+
+m3 <- read_excel("data/m3.xlsx") |>
+  pivot_longer(cols = -Species,
+               names_to = "Year") |>
+  mutate(million_m3 = value/1e3)
+```
+
+```{r}
+m3 |>
+  group_by(Year) |>
+  summarise(total_m3 = sum(million_m3)) |>
+  ggplot()+
+  geom_col(aes(x = Year, y = total_m3))
+```
